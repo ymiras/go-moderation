@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/config"
 )
 
 // RateLimit returns a middleware that implements token bucket rate limiting.

@@ -12,7 +12,7 @@
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/ymiras/dify-moderation.git
+git clone https://github.com/ymiras/go-moderation.git
 cd dify-moderation
 ```
 

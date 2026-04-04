@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/engine"
-	"github.com/ymiras/dify-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/engine"
+	"github.com/ymiras/go-moderation/internal/model"
 )
 
 // Handler handles Standard REST API moderation requests.

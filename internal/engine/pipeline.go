@@ -3,9 +3,9 @@ package engine
 import (
 	"sync"
 
-	"github.com/ymiras/dify-moderation/internal/matcher"
-	"github.com/ymiras/dify-moderation/internal/model"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/matcher"
+	"github.com/ymiras/go-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/storage"
 )
 
 // Pipeline defines the interface for executing matchers.

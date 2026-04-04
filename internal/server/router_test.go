@@ -8,9 +8,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/config"
-	"github.com/ymiras/dify-moderation/internal/engine"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/engine"
+	"github.com/ymiras/go-moderation/internal/storage"
 	"go.uber.org/zap"
 )
 

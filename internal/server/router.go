@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/adapter/dify"
-	"github.com/ymiras/dify-moderation/internal/adapter/standard"
-	"github.com/ymiras/dify-moderation/internal/config"
-	"github.com/ymiras/dify-moderation/internal/engine"
-	"github.com/ymiras/dify-moderation/internal/middleware"
+	"github.com/ymiras/go-moderation/internal/adapter/dify"
+	"github.com/ymiras/go-moderation/internal/adapter/standard"
+	"github.com/ymiras/go-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/engine"
+	"github.com/ymiras/go-moderation/internal/middleware"
 	"go.uber.org/zap"
 )
 

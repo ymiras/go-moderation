@@ -1,4 +1,4 @@
-module github.com/ymiras/dify-moderation
+module github.com/ymiras/go-moderation
 
 go 1.26
 

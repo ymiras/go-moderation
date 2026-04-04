@@ -1,8 +1,8 @@
 package matcher
 
 import (
-	"github.com/ymiras/dify-moderation/internal/model"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/storage"
 )
 
 // Matcher defines the interface for content matching algorithms.

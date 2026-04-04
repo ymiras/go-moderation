@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/config"
 )
 
 func TestRateLimit(t *testing.T) {

@@ -3,7 +3,7 @@ package engine
 import (
 	"testing"
 
-	"github.com/ymiras/dify-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/model"
 )
 
 func TestModerationContext(t *testing.T) {

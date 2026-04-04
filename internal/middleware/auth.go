@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/config"
 )
 
 // Auth returns a middleware that validates Bearer tokens.

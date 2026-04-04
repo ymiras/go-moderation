@@ -3,10 +3,10 @@ package engine
 import (
 	"time"
 
-	"github.com/ymiras/dify-moderation/internal/config"
-	"github.com/ymiras/dify-moderation/internal/matcher"
-	"github.com/ymiras/dify-moderation/internal/model"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/matcher"
+	"github.com/ymiras/go-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/storage"
 )
 
 // ModerationService is the entry point for content moderation.

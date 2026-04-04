@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/dify-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/model"
 )
 
 func TestHandler_Moderate(t *testing.T) {

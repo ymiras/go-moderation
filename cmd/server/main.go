@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/ymiras/dify-moderation/internal/config"
-	"github.com/ymiras/dify-moderation/internal/engine"
-	"github.com/ymiras/dify-moderation/internal/matcher"
-	"github.com/ymiras/dify-moderation/internal/server"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/config"
+	"github.com/ymiras/go-moderation/internal/engine"
+	"github.com/ymiras/go-moderation/internal/matcher"
+	"github.com/ymiras/go-moderation/internal/server"
+	"github.com/ymiras/go-moderation/internal/storage"
 	"go.uber.org/zap"
 )
 

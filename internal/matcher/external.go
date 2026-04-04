@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ymiras/dify-moderation/internal/model"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/storage"
 )
 
 // ResponseType defines the type of response parsing.

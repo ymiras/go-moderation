@@ -1,4 +1,4 @@
-# Dify Moderation Plugin (Go)
+# Go Moderation
 
 高性能、双路由架构的内容安全审核服务。原生兼容 Dify API Extension，同时提供标准 REST API，适用于 AI 应用、LLM 网关及企业级文本过滤场景。
 
@@ -20,7 +20,7 @@
 ## 项目结构
 
 ```
-dify-moderation/
+go-moderation/
 ├── cmd/
 │   └── server/main.go              # 服务入口
 ├── internal/
@@ -60,8 +60,8 @@ dify-moderation/
 
 ```bash
 # 克隆项目
-git clone https://github.com/ymiras/dify-moderation.git
-cd dify-moderation
+git clone https://github.com/ymiras/go-moderation.git
+cd go-moderation
 
 # 下载依赖
 go mod download

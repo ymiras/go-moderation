@@ -3,8 +3,8 @@ package matcher
 import (
 	"testing"
 
-	"github.com/ymiras/dify-moderation/internal/model"
-	"github.com/ymiras/dify-moderation/internal/storage"
+	"github.com/ymiras/go-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/storage"
 )
 
 // mockWordBankForRegex implements storage.WordBank for regex testing.

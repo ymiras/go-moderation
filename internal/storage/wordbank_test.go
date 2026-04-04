@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ymiras/dify-moderation/internal/model"
+	"github.com/ymiras/go-moderation/internal/model"
 )
 
 func TestNewWordBank(t *testing.T) {
