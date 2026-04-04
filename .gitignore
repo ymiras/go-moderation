@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-dify-moderation
+go-moderation
 
 # Test binary
 *.test

@@ -13,7 +13,7 @@
 
 ```bash
 git clone https://github.com/ymiras/go-moderation.git
-cd dify-moderation
+cd go-moderation
 ```
 
 ### 2. 安装依赖
@@ -54,15 +54,15 @@ make run
 
 ```bash
 # 构建镜像
-docker build -t dify-moderation:latest .
+docker build -t go-moderation:latest .
 
 # 运行容器
 docker run -d \
-  --name dify-moderation \
+  --name go-moderation \
   -p 8080:8080 \
   -v $(pwd)/configs:/app/configs:ro \
   -e MODERATION_AUTH_API_KEYS=your-secret-key \
-  dify-moderation:latest
+  go-moderation:latest
 ```
 
 **方式四：使用 Docker Compose**
@@ -189,8 +189,8 @@ Ctrl+C
 **Docker：**
 
 ```bash
-docker stop dify-moderation
-docker rm dify-moderation
+docker stop go-moderation
+docker rm go-moderation
 ```
 
 **Docker Compose：**

@@ -79,14 +79,14 @@ make run
 
 ```bash
 # 构建镜像
-docker build -t dify-moderation:latest .
+docker build -t go-moderation:latest .
 
 # 运行容器
 docker run -d \
-  --name dify-moderation \
+  --name go-moderation \
   -p 8080:8080 \
   -v $(pwd)/configs:/app/configs:ro \
-  dify-moderation:latest
+  go-moderation:latest
 
 # 或使用 docker-compose
 docker-compose up -d

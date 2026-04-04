@@ -1,5 +1,5 @@
 #!/bin/bash
-# Health check script for dify-moderation service
+# Health check script for go-moderation service
 
 set -e
 
@@ -29,7 +29,7 @@ check_health() {
 }
 
 # Main
-echo "Checking health of dify-moderation at ${HOST}:${PORT}..."
+echo "Checking health of go-moderation at ${HOST}:${PORT}..."
 
 if check_health "$HOST" "$PORT" "$TIMEOUT"; then
     exit 0

@@ -1,10 +1,10 @@
 .PHONY: build run test clean docker-build docker-run docker-compose-up docker-compose-down lint
 
 # Variables
-BINARY_NAME=dify-moderation
+BINARY_NAME=go-moderation
 BINARY_DIR=bin
 BUILD_DIR=.
-DOCKER_IMAGE=dify-moderation:latest
+DOCKER_IMAGE=go-moderation:latest
 COMPOSE_FILE=docker-compose.yml
 
 # Go parameters

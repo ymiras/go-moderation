@@ -1,14 +1,14 @@
 #!/bin/bash
-# Deploy script for dify-moderation service using Docker
+# Deploy script for go-moderation service using Docker
 
 set -e
 
-IMAGE_NAME="${IMAGE_NAME:-dify-moderation}"
+IMAGE_NAME="${IMAGE_NAME:-go-moderation}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
-CONTAINER_NAME="${CONTAINER_NAME:-dify-moderation}"
+CONTAINER_NAME="${CONTAINER_NAME:-go-moderation}"
 HOST_PORT="${HOST_PORT:-8080}"
 
-echo "=== dify-moderation Deploy Script ==="
+echo "=== go-moderation Deploy Script ==="
 echo "Image: ${IMAGE_NAME}:${IMAGE_TAG}"
 echo "Container name: ${CONTAINER_NAME}"
 echo "Host port: ${HOST_PORT}"

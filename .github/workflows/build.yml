@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ['1.23']
+        go-version: ['1.26']
         platform: [linux/amd64, linux/arm64]
     steps:
       - name: Checkout code
@@ -68,10 +68,10 @@ jobs:
       - name: Build binary
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }} \
-            go build -ldflags="-w -s" -o bin/dify-moderation-${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }} ./cmd/server
+            go build -ldflags="-w -s" -o bin/go-moderation-${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }} ./cmd/server
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dify-moderation-${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }}
+          name: go-moderation-${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }}
           path: bin/*

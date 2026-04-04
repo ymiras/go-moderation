@@ -1,5 +1,5 @@
 #!/bin/bash
-# Benchmark script for dify-moderation service
+# Benchmark script for go-moderation service
 
 set -e
 
@@ -13,7 +13,7 @@ REQUESTS="${BENCHMARK_REQUESTS:-100}"
 # Test payload
 PAYLOAD='{"text":"Hello world","point":"input","app_id":"benchmark-test"}'
 
-echo "=== dify-moderation Benchmark ==="
+echo "=== go-moderation Benchmark ==="
 echo "Host: $HOST"
 echo "Port: $PORT"
 echo "Endpoint: $ENDPOINT"
