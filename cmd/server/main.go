@@ -4,9 +4,10 @@ import (
 	"log"
 
 	"github.com/ymiras/dify-moderation/internal/config"
-	"github.com/ymiras/dify-moderation/internal/model"
-
-	"github.com/gin-gonic/gin"
+	"github.com/ymiras/dify-moderation/internal/engine"
+	"github.com/ymiras/dify-moderation/internal/matcher"
+	"github.com/ymiras/dify-moderation/internal/server"
+	"github.com/ymiras/dify-moderation/internal/storage"
 	"go.uber.org/zap"
 )
 
@@ -24,34 +25,48 @@ func main() {
 	}
 	defer logger.Sync()
 
-	// Set Gin mode
-	gin.SetMode(gin.ReleaseMode)
+	// Initialize word bank
+	wordBank := storage.NewWordBank()
+	if err := wordBank.Load("configs/wordlist/default.csv"); err != nil {
+		logger.Warn("Failed to load word bank, using empty word bank", zap.Error(err))
+	}
 
-	// Initialize Gin router
-	router := gin.New()
-	router.Use(gin.Recovery())
-	router.Use(gin.Logger())
-
-	// Health check endpoint
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status": "ok",
+	// Initialize matchers based on config
+	var matchers []matcher.Matcher
+	if cfg.Matchers.AC.Enabled {
+		m, err := matcher.NewAC(&matcher.ACConfig{})
+		if err != nil {
+			logger.Fatal("Failed to create AC matcher", zap.Error(err))
+		}
+		matchers = append(matchers, m)
+		logger.Info("AC matcher enabled")
+	}
+	if cfg.Matchers.Regex.Enabled {
+		m, err := matcher.NewRegex(&matcher.RegexConfig{})
+		if err != nil {
+			logger.Fatal("Failed to create Regex matcher", zap.Error(err))
+		}
+		matchers = append(matchers, m)
+		logger.Info("Regex matcher enabled")
+	}
+	if cfg.Matchers.External.Enabled {
+		m, err := matcher.NewExternal(&matcher.ExternalConfig{
+			Endpoint: cfg.Matchers.External.APIURL,
+			APIKey:   cfg.Matchers.External.APIKey,
+			Timeout:  cfg.Matchers.External.Timeout,
 		})
-	})
+		if err != nil {
+			logger.Fatal("Failed to create External matcher", zap.Error(err))
+		}
+		matchers = append(matchers, m)
+		logger.Info("External matcher enabled", zap.String("api_url", cfg.Matchers.External.APIURL))
+	}
 
-	// Placeholder route for future implementation
-	router.POST("/api/v1/moderate", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"flagged":    false,
-			"action":     model.ActionPass,
-			"hits":       []model.HitRecord{},
-			"latency_ms": 0,
-		})
-	})
+	// Create moderation service
+	svc := engine.NewService(cfg, wordBank, matchers)
 
-	// Start server
-	logger.Info("Starting server", zap.String("addr", cfg.Server.Addr()))
-	if err := router.Run(cfg.Server.Addr()); err != nil {
-		logger.Fatal("Server failed to start", zap.Error(err))
+	// Setup router and start server
+	if err := server.StartServer(cfg, svc, logger); err != nil {
+		logger.Fatal("Server failed", zap.Error(err))
 	}
 }

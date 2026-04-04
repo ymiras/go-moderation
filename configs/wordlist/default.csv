@@ -1,0 +1,18 @@
+# Sensitive word list for content moderation
+# Format: word,type,severity,action
+# Types: spam, profanity, hate, violence, political
+# Severity: low, medium, high, critical
+# Action: block, review, pass
+
+# Profanity (examples - replace with actual sensitive content)
+fuck,profanity,high,block
+shit,profanity,medium,block
+damn,profanity,low,review
+
+# Spam indicators
+free money,spam,medium,review
+click here,spam,low,review
+act now,spam,low,review
+
+# Hate speech
+hate you,hate,high,block

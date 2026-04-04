@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -12,13 +13,54 @@ import (
 type Config struct {
 	Server     ServerConfig     `mapstructure:"server"`
 	Log        LogConfig        `mapstructure:"log"`
+	Auth       AuthConfig       `mapstructure:"auth"`
+	RateLimit  RateLimitConfig  `mapstructure:"ratelimit"`
 	Moderation ModerationConfig `mapstructure:"moderation"`
+	Matchers   MatchersConfig   `mapstructure:"matchers"`
+}
+
+// MatchersConfig holds matcher configurations
+type MatchersConfig struct {
+	AC       ACConfig       `mapstructure:"ac"`
+	Regex    RegexConfig    `mapstructure:"regex"`
+	External ExternalConfig `mapstructure:"external"`
+}
+
+// ACConfig is the configuration for AC automaton matcher
+type ACConfig struct {
+	Enabled bool `mapstructure:"enabled"`
+}
+
+// RegexConfig is the configuration for regex matcher
+type RegexConfig struct {
+	Enabled bool `mapstructure:"enabled"`
+}
+
+// ExternalConfig is the configuration for external API matcher
+type ExternalConfig struct {
+	Enabled bool          `mapstructure:"enabled"`
+	APIURL  string        `mapstructure:"api_url"`
+	APIKey  string        `mapstructure:"api_key"`
+	Timeout time.Duration `mapstructure:"timeout"`
 }
 
 // ServerConfig holds HTTP server settings
 type ServerConfig struct {
-	Host string `mapstructure:"host"`
-	Port int    `mapstructure:"port"`
+	Host         string        `mapstructure:"host"`
+	Port         int           `mapstructure:"port"`
+	ReadTimeout  time.Duration `mapstructure:"read_timeout"`
+	WriteTimeout time.Duration `mapstructure:"write_timeout"`
+}
+
+// AuthConfig holds authentication settings
+type AuthConfig struct {
+	APIKeys []string `mapstructure:"api_keys"`
+}
+
+// RateLimitConfig holds rate limiting settings
+type RateLimitConfig struct {
+	Rate     float64 `mapstructure:"rate"`
+	Capacity int     `mapstructure:"capacity"`
 }
 
 // LogConfig holds logging settings
@@ -78,6 +120,15 @@ func setDefaults(v *viper.Viper) {
 	// Server defaults
 	v.SetDefault("server.host", "0.0.0.0")
 	v.SetDefault("server.port", 8080)
+	v.SetDefault("server.read_timeout", "10s")
+	v.SetDefault("server.write_timeout", "10s")
+
+	// Auth defaults
+	v.SetDefault("auth.api_keys", []string{})
+
+	// Rate limit defaults
+	v.SetDefault("ratelimit.rate", 100.0)
+	v.SetDefault("ratelimit.capacity", 200)
 
 	// Log defaults
 	v.SetDefault("log.level", "info")
@@ -87,4 +138,12 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("moderation.pipeline_mode", "chain")
 	v.SetDefault("moderation.weighted_threshold", 0.5)
 	v.SetDefault("moderation.fallback_action", "pass")
+
+	// Matcher defaults
+	v.SetDefault("matchers.ac.enabled", true)
+	v.SetDefault("matchers.regex.enabled", false)
+	v.SetDefault("matchers.external.enabled", false)
+	v.SetDefault("matchers.external.api_url", "")
+	v.SetDefault("matchers.external.api_key", "")
+	v.SetDefault("matchers.external.timeout", "5s")
 }

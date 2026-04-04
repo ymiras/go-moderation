@@ -1,12 +1,33 @@
 server:
   host: "0.0.0.0"
   port: 8080
+  read_timeout: "10s"
+  write_timeout: "10s"
 
 log:
   level: "info"
   encoding: "json"
 
+auth:
+  api_keys:
+    - "secret-key-1"
+
+ratelimit:
+  rate: 100
+  capacity: 200
+
 moderation:
   pipeline_mode: "chain"
   weighted_threshold: 0.5
   fallback_action: "pass"
+
+matchers:
+  ac:
+    enabled: true
+  regex:
+    enabled: false
+  external:
+    enabled: false
+    api_url: ""
+    api_key: ""
+    timeout: "5s"

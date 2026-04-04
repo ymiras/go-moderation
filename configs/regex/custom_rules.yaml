@@ -1,0 +1,31 @@
+# Custom regex rules for content moderation
+# These patterns are loaded by the regex matcher
+
+patterns:
+  # Email addresses (may want to redact in outputs)
+  - pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    name: email_pattern
+    type: privacy
+    severity: medium
+    action: review
+
+  # Phone numbers
+  - pattern: '\b\d{3}[-.]?\d{3}[-.]?\d{4}\b'
+    name: phone_pattern
+    type: privacy
+    severity: medium
+    action: review
+
+  # URLs (potential spam/phishing)
+  - pattern: 'https?://[^\s]+'
+    name: url_pattern
+    type: spam
+    severity: low
+    action: review
+
+  # Credit card numbers
+  - pattern: '\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b'
+    name: credit_card_pattern
+    type: privacy
+    severity: critical
+    action: block
