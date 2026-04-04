@@ -29,8 +29,9 @@ type LogConfig struct {
 
 // ModerationConfig holds moderation engine settings
 type ModerationConfig struct {
-	PipelineMode   string `mapstructure:"pipeline_mode"`
-	FallbackAction string `mapstructure:"fallback_action"`
+	PipelineMode      string  `mapstructure:"pipeline_mode"`
+	WeightedThreshold float64 `mapstructure:"weighted_threshold"`
+	FallbackAction    string  `mapstructure:"fallback_action"`
 }
 
 // Addr returns the server address in host:port format
@@ -84,5 +85,6 @@ func setDefaults(v *viper.Viper) {
 
 	// Moderation defaults
 	v.SetDefault("moderation.pipeline_mode", "chain")
+	v.SetDefault("moderation.weighted_threshold", 0.5)
 	v.SetDefault("moderation.fallback_action", "pass")
 }

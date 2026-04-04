@@ -8,4 +8,5 @@ log:
 
 moderation:
   pipeline_mode: "chain"
+  weighted_threshold: 0.5
   fallback_action: "pass"
