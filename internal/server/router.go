@@ -1,7 +1,12 @@
 package server
 
 import (
+	"context"
+	"errors"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ymiras/go-moderation/internal/adapter/dify"
@@ -50,7 +55,32 @@ func StartServer(cfg *config.Config, svc *engine.ModerationService, log *zap.Log
 		WriteTimeout: cfg.Server.WriteTimeout,
 	}
 
-	// TODO: Implement graceful shutdown with signal handling
-	// For now, just start the server
-	return srv.ListenAndServe()
+	// Channel to receive OS signals
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+	// Start server in goroutine
+	go func() {
+		log.Info("Server starting", zap.String("addr", srv.Addr))
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal("Server failed to start", zap.Error(err))
+		}
+	}()
+
+	// Wait for termination signal
+	sig := <-sigChan
+	log.Info("Received signal, initiating graceful shutdown", zap.String("signal", sig.String()))
+
+	// Create shutdown context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.Server.ShutdownTimeout)
+	defer cancel()
+
+	// Attempt graceful shutdown
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Warn("Server shutdown error", zap.Error(err))
+		return err
+	}
+
+	log.Info("Server shutdown complete")
+	return nil
 }
