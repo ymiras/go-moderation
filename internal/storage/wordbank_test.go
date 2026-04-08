@@ -24,12 +24,12 @@ test,political,low,pass`
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(tmpfile.Name())
+	defer func() { _ = os.Remove(tmpfile.Name()) }()
 
 	if _, err := tmpfile.WriteString(content); err != nil {
 		t.Fatal(err)
 	}
-	tmpfile.Close()
+	_ = tmpfile.Close()
 
 	wb := NewWordBank()
 	err = wb.Load(tmpfile.Name())
@@ -50,15 +50,15 @@ world,ad,medium,mask`
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(tmpfile.Name())
+	defer func() { _ = os.Remove(tmpfile.Name()) }()
 
 	if _, err := tmpfile.WriteString(content); err != nil {
 		t.Fatal(err)
 	}
-	tmpfile.Close()
+	_ = tmpfile.Close()
 
 	wb := NewWordBank()
-	wb.Load(tmpfile.Name())
+	_ = wb.Load(tmpfile.Name())
 
 	found, kw := wb.Contains("hello")
 	if !found {
@@ -85,15 +85,15 @@ world,ad,medium,mask`
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(tmpfile.Name())
+	defer func() { _ = os.Remove(tmpfile.Name()) }()
 
 	if _, err := tmpfile.WriteString(content); err != nil {
 		t.Fatal(err)
 	}
-	tmpfile.Close()
+	_ = tmpfile.Close()
 
 	wb := NewWordBank()
-	wb.Load(tmpfile.Name())
+	_ = wb.Load(tmpfile.Name())
 
 	words := wb.Words()
 	if len(words) != 2 {

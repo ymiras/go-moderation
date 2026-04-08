@@ -3,8 +3,8 @@ version: '3.8'
 services:
   go-moderation:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: deployments/docker/Dockerfile
     container_name: go-moderation
     ports:
       - "8080:8080"

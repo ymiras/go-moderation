@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"context"
@@ -9,11 +9,12 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ymiras/go-moderation/internal/adapter/dify"
-	"github.com/ymiras/go-moderation/internal/adapter/standard"
+	"github.com/ymiras/go-moderation/internal/api/dify"
+	httpadapter "github.com/ymiras/go-moderation/internal/api/http"
+	"github.com/ymiras/go-moderation/internal/api/middleware"
 	"github.com/ymiras/go-moderation/internal/config"
 	"github.com/ymiras/go-moderation/internal/engine"
-	"github.com/ymiras/go-moderation/internal/middleware"
+
 	"go.uber.org/zap"
 )
 
@@ -38,7 +39,7 @@ func SetupRouter(cfg *config.Config, svc *engine.ModerationService, log *zap.Log
 	r.POST("/dify/moderation", difyHandler.Moderate)
 
 	// Standard adapter
-	standardHandler := standard.NewHandler(svc)
+	standardHandler := httpadapter.NewHandler(svc)
 	r.POST("/api/moderate", standardHandler.Moderate)
 
 	return r

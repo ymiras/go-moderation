@@ -1,4 +1,4 @@
-package matcher
+package external
 
 import (
 	"encoding/json"
@@ -30,7 +30,7 @@ func TestExternalMatcher_Match(t *testing.T) {
 					{Word: "bad", Type: "profanity", Severity: "high"},
 				},
 			}
-			json.NewEncoder(w).Encode(resp)
+			_ = json.NewEncoder(w).Encode(resp)
 		}))
 		defer server.Close()
 
@@ -59,7 +59,7 @@ func TestExternalMatcher_Match(t *testing.T) {
 	t.Run("not flagged response", func(t *testing.T) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			resp := JSONResponse{Flagged: false, Hits: nil}
-			json.NewEncoder(w).Encode(resp)
+			_ = json.NewEncoder(w).Encode(resp)
 		}))
 		defer server.Close()
 
@@ -84,7 +84,7 @@ func TestExternalMatcher_Match(t *testing.T) {
 
 	t.Run("simple response type", func(t *testing.T) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("flagged"))
+			_, _ = w.Write([]byte("flagged"))
 		}))
 		defer server.Close()
 
@@ -136,7 +136,7 @@ func TestExternalMatcher_Match(t *testing.T) {
 	t.Run("fail open on timeout", func(t *testing.T) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			time.Sleep(100 * time.Millisecond)
-			w.Write([]byte("ok"))
+			_, _ = w.Write([]byte("ok"))
 		}))
 		defer server.Close()
 

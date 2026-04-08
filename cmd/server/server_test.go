@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"bytes"
@@ -18,7 +18,7 @@ func TestSetupRouter(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
+	defer func() { _ = logger.Sync() }()
 
 	// Create minimal config for testing
 	cfg := &config.Config{
@@ -187,7 +187,7 @@ func TestSetupRouter(t *testing.T) {
 func TestAuthMiddlewareBypass(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
+	defer func() { _ = logger.Sync() }()
 
 	cfg := &config.Config{
 		Auth: config.AuthConfig{
@@ -220,7 +220,7 @@ func TestAuthMiddlewareBypass(t *testing.T) {
 func TestRateLimitMiddlewareBypass(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
+	defer func() { _ = logger.Sync() }()
 
 	cfg := &config.Config{
 		Auth: config.AuthConfig{
@@ -256,7 +256,7 @@ func TestRateLimitMiddlewareBypass(t *testing.T) {
 func TestRequestIDGeneration(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
+	defer func() { _ = logger.Sync() }()
 
 	cfg := &config.Config{
 		Auth: config.AuthConfig{

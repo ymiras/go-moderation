@@ -42,7 +42,7 @@ func (wb *inMemoryWordBank) Load(path string) error {
 	if err != nil {
 		return fmt.Errorf("failed to open word bank file: %w", err)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	reader := csv.NewReader(file)
 	reader.FieldsPerRecord = 4

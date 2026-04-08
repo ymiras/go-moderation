@@ -1,4 +1,4 @@
-package matcher
+package regex
 
 import (
 	"testing"

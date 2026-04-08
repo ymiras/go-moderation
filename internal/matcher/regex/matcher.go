@@ -1,13 +1,20 @@
-package matcher
+package regex
 
 import (
 	"regexp"
 	"strings"
 	"sync"
 
+	"github.com/ymiras/go-moderation/internal/matcher"
 	"github.com/ymiras/go-moderation/internal/model"
 	"github.com/ymiras/go-moderation/internal/storage"
 )
+
+func init() {
+	matcher.RegistryInstance.Register("regex", func(cfg any) (matcher.Matcher, error) {
+		return NewRegex(cfg.(*RegexConfig))
+	})
+}
 
 // RegexConfig is the configuration for the regex matcher.
 // Currently empty, reserved for future options.
@@ -22,7 +29,7 @@ type RegexMatcher struct {
 }
 
 // NewRegex New creates a new regex matcher.
-func NewRegex(cfg *RegexConfig) (Matcher, error) {
+func NewRegex(cfg *RegexConfig) (matcher.Matcher, error) {
 	return &RegexMatcher{
 		cfg:   cfg,
 		cache: make(map[string]*regexp.Regexp),

@@ -1,4 +1,4 @@
-package matcher
+package external
 
 import (
 	"bytes"
@@ -9,9 +9,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ymiras/go-moderation/internal/matcher"
 	"github.com/ymiras/go-moderation/internal/model"
 	"github.com/ymiras/go-moderation/internal/storage"
 )
+
+func init() {
+	matcher.RegistryInstance.Register("external", func(cfg any) (matcher.Matcher, error) {
+		return NewExternal(cfg.(*ExternalConfig))
+	})
+}
 
 // ResponseType defines the type of response parsing.
 type ResponseType string
@@ -38,7 +45,7 @@ type ExternalMatcher struct {
 }
 
 // NewExternal creates a new external API matcher.
-func NewExternal(cfg *ExternalConfig) (Matcher, error) {
+func NewExternal(cfg *ExternalConfig) (matcher.Matcher, error) {
 	if cfg == nil {
 		return nil, fmt.Errorf("external config is required")
 	}
@@ -94,7 +101,7 @@ func (m *ExternalMatcher) callAPI(text string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)

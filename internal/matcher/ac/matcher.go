@@ -1,12 +1,19 @@
-package matcher
+package ac
 
 import (
 	"fmt"
 	"sync"
 
+	"github.com/ymiras/go-moderation/internal/matcher"
 	"github.com/ymiras/go-moderation/internal/model"
 	"github.com/ymiras/go-moderation/internal/storage"
 )
+
+func init() {
+	matcher.RegistryInstance.Register("ac", func(cfg any) (matcher.Matcher, error) {
+		return NewAC(cfg.(*ACConfig))
+	})
+}
 
 // ACConfig is the configuration for the AC automaton matcher.
 // Currently empty, reserved for future options (e.g., case sensitivity).
@@ -34,7 +41,7 @@ func newACNode() *acNode {
 }
 
 // NewAC New creates a new AC automaton matcher.
-func NewAC(cfg *ACConfig) (Matcher, error) {
+func NewAC(cfg *ACConfig) (matcher.Matcher, error) {
 	return &ACMatcher{cfg: cfg}, nil
 }
 

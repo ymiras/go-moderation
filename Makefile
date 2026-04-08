@@ -5,7 +5,8 @@ BINARY_NAME=go-moderation
 BINARY_DIR=bin
 BUILD_DIR=.
 DOCKER_IMAGE=go-moderation:latest
-COMPOSE_FILE=docker-compose.yml
+COMPOSE_FILE=deployments/docker/docker-compose.yml
+DOCKERFILE=deployments/docker/Dockerfile
 
 # Go parameters
 GOCMD=go
@@ -52,7 +53,7 @@ lint:
 # Docker build
 docker-build:
 	@echo "Building Docker image $(DOCKER_IMAGE)..."
-	docker build -t $(DOCKER_IMAGE) .
+	docker build -t $(DOCKER_IMAGE) -f $(DOCKERFILE) .
 
 # Docker run
 docker-run:

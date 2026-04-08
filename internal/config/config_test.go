@@ -13,8 +13,8 @@ func TestLoad_DefaultConfig(t *testing.T) {
 
 	// Change to temp dir so viper can't find any config
 	originalDir, _ := os.Getwd()
-	defer os.Chdir(originalDir)
-	os.Chdir(tmpDir)
+	defer func() { _ = os.Chdir(originalDir) }()
+	_ = os.Chdir(tmpDir)
 
 	cfg, err := Load()
 	if err != nil {
@@ -117,10 +117,10 @@ matchers:
 
 	// Create configs directory and symlink to temp
 	originalDir, _ := os.Getwd()
-	defer os.Chdir(originalDir)
-	os.Chdir(tmpDir)
-	os.MkdirAll("configs", 0755)
-	os.WriteFile(filepath.Join("configs", "default.yaml"), []byte(configContent), 0644)
+	defer func() { _ = os.Chdir(originalDir) }()
+	_ = os.Chdir(tmpDir)
+	_ = os.MkdirAll("configs", 0755)
+	_ = os.WriteFile(filepath.Join("configs", "default.yaml"), []byte(configContent), 0644)
 
 	cfg, err := Load()
 	if err != nil {

@@ -6,7 +6,9 @@ import (
 	"github.com/ymiras/go-moderation/internal/config"
 	"github.com/ymiras/go-moderation/internal/engine"
 	"github.com/ymiras/go-moderation/internal/matcher"
-	"github.com/ymiras/go-moderation/internal/server"
+	"github.com/ymiras/go-moderation/internal/matcher/ac"
+	"github.com/ymiras/go-moderation/internal/matcher/external"
+	"github.com/ymiras/go-moderation/internal/matcher/regex"
 	"github.com/ymiras/go-moderation/internal/storage"
 	"go.uber.org/zap"
 )
@@ -23,7 +25,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize logger: %v", err)
 	}
-	defer logger.Sync()
+	defer func() { _ = logger.Sync() }()
 
 	// Initialize word bank
 	wordBank := storage.NewWordBank()
@@ -34,7 +36,7 @@ func main() {
 	// Initialize matchers based on config
 	var matchers []matcher.Matcher
 	if cfg.Matchers.AC.Enabled {
-		m, err := matcher.NewAC(&matcher.ACConfig{})
+		m, err := ac.NewAC(&ac.ACConfig{})
 		if err != nil {
 			logger.Fatal("Failed to create AC matcher", zap.Error(err))
 		}
@@ -42,7 +44,7 @@ func main() {
 		logger.Info("AC matcher enabled")
 	}
 	if cfg.Matchers.Regex.Enabled {
-		m, err := matcher.NewRegex(&matcher.RegexConfig{})
+		m, err := regex.NewRegex(&regex.RegexConfig{})
 		if err != nil {
 			logger.Fatal("Failed to create Regex matcher", zap.Error(err))
 		}
@@ -50,7 +52,7 @@ func main() {
 		logger.Info("Regex matcher enabled")
 	}
 	if cfg.Matchers.External.Enabled {
-		m, err := matcher.NewExternal(&matcher.ExternalConfig{
+		m, err := external.NewExternal(&external.ExternalConfig{
 			Endpoint: cfg.Matchers.External.APIURL,
 			APIKey:   cfg.Matchers.External.APIKey,
 			Timeout:  cfg.Matchers.External.Timeout,
@@ -66,7 +68,7 @@ func main() {
 	svc := engine.NewService(cfg, wordBank, matchers)
 
 	// Setup router and start server
-	if err := server.StartServer(cfg, svc, logger); err != nil {
+	if err := StartServer(cfg, svc, logger); err != nil {
 		logger.Fatal("Server failed", zap.Error(err))
 	}
 }

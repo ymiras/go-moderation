@@ -54,8 +54,8 @@ func (h *Handler) Moderate(c *gin.Context) {
 	}
 
 	// Extract text to moderate
-	text := ""
-	point := model.PointInput
+	var text string
+	var point model.PointType
 	if req.Point == "app.moderation.input" {
 		text = req.Params.Query
 		point = model.PointInput

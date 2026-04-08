@@ -12,7 +12,7 @@ func TestNewProduction(t *testing.T) {
 	if log == nil {
 		t.Fatal("NewProduction() returned nil logger")
 	}
-	log.Sync() // cleanup
+	_ = log.Sync() // cleanup
 }
 
 func TestNewDevelopment(t *testing.T) {
@@ -23,7 +23,7 @@ func TestNewDevelopment(t *testing.T) {
 	if log == nil {
 		t.Fatal("NewDevelopment() returned nil logger")
 	}
-	log.Sync() // cleanup
+	_ = log.Sync() // cleanup
 }
 
 func TestNewJSON(t *testing.T) {
@@ -34,7 +34,7 @@ func TestNewJSON(t *testing.T) {
 	if log == nil {
 		t.Fatal("NewJSON() returned nil logger")
 	}
-	log.Sync() // cleanup
+	_ = log.Sync() // cleanup
 }
 
 func TestNewJSON_InvalidLevel(t *testing.T) {
