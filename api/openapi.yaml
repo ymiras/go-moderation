@@ -1,0 +1,263 @@
+openapi: 3.0.3
+info:
+  title: Go Moderation API
+  description: High-performance content moderation service with dual-routing architecture
+  version: 1.0.0
+  contact:
+    name: go-moderation
+
+servers:
+  - url: http://localhost:8080
+    description: Default server
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Returns 200 OK when server is running. No auth or rate limit applied.
+      operationId: healthCheck
+      tags:
+        - System
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+
+  /dify/moderation:
+    post:
+      summary: Dify API Extension moderation endpoint
+      description: |
+        Dify Moderation API Extension compatible endpoint.
+        Supports `app.moderation.input` and `app.moderation.output` point types.
+      operationId: difyModerate
+      tags:
+        - Dify Adapter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DifyModerationRequest'
+            example:
+              point: app.moderation.input
+              params:
+                app_id: app-123
+                query: "Hello world"
+      responses:
+        '200':
+          description: Moderation result (Dify format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DifyModerationResponse'
+        '400':
+          description: Invalid request (unsupported point or missing text)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /api/v1/text/moderation:
+    post:
+      summary: Standard REST moderation endpoint
+      description: |
+        Standard moderation API v1. Returns detailed moderation results
+        including matched keywords and severity levels.
+      operationId: standardModerate
+      tags:
+        - Standard API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StandardModerationRequest'
+            example:
+              text: "Hello world"
+              point: "input"
+              app_id: "app-123"
+      responses:
+        '200':
+          description: Moderation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardModerationResponse'
+        '400':
+          description: Invalid request (missing text or invalid point)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+components:
+  schemas:
+    DifyModerationRequest:
+      type: object
+      required:
+        - point
+        - params
+      properties:
+        point:
+          type: string
+          enum:
+            - app.moderation.input
+            - app.moderation.output
+          description: Dify moderation point type
+        params:
+          type: object
+          required:
+            - query
+          properties:
+            app_id:
+              type: string
+              description: Application ID
+            inputs:
+              type: object
+              description: Additional input parameters
+            query:
+              type: string
+              description: Query text (for input moderation)
+            text:
+              type: string
+              description: Output text (for output moderation)
+
+    DifyModerationResponse:
+      type: object
+      properties:
+        flagged:
+          type: boolean
+          description: Whether content was flagged
+        action:
+          type: string
+          enum:
+            - direct_output
+          description: Dify action type
+        preset_response:
+          type: string
+          description: Preset response message when flagged (Chinese)
+
+    StandardModerationRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: Text content to moderate
+        point:
+          type: string
+          enum:
+            - input
+            - output
+          default: input
+          description: Moderation point
+        app_id:
+          type: string
+          description: Application ID
+
+    StandardModerationResponse:
+      type: object
+      properties:
+        flagged:
+          type: boolean
+          description: Whether content was flagged
+        action:
+          $ref: '#/components/schemas/ActionType'
+        hits:
+          type: array
+          items:
+            $ref: '#/components/schemas/HitRecord'
+          description: List of matched records
+        latency_ms:
+          type: number
+          format: double
+          description: Moderation processing time in milliseconds
+
+    ActionType:
+      type: string
+      enum:
+        - pass
+        - block
+        - mask
+      description: Moderation action
+
+    HitRecord:
+      type: object
+      properties:
+        word:
+          type: string
+          description: Matched keyword
+        type:
+          type: string
+          description: Match type
+        severity:
+          $ref: '#/components/schemas/Severity'
+        index:
+          type: integer
+          description: Position in text
+        length:
+          type: integer
+          description: Match length
+
+    Severity:
+      type: string
+      enum:
+        - low
+        - medium
+        - high
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+  responses:
+    Unauthorized:
+      description: Unauthorized (missing or invalid API key)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "missing authorization header"
+
+    TooManyRequests:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+            example: 1
+          description: Seconds to wait before retrying
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "rate limit exceeded"
+            retry_after: 1
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key authentication (format: Bearer <key>)
+
+security:
+  - ApiKeyAuth: []

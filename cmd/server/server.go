@@ -10,8 +10,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ymiras/go-moderation/internal/api/dify"
-	httpadapter "github.com/ymiras/go-moderation/internal/api/http"
 	"github.com/ymiras/go-moderation/internal/api/middleware"
+	standardadapter "github.com/ymiras/go-moderation/internal/api/standard"
 	"github.com/ymiras/go-moderation/internal/config"
 	"github.com/ymiras/go-moderation/internal/engine"
 
@@ -39,8 +39,8 @@ func SetupRouter(cfg *config.Config, svc *engine.ModerationService, log *zap.Log
 	r.POST("/dify/moderation", difyHandler.Moderate)
 
 	// Standard adapter
-	standardHandler := httpadapter.NewHandler(svc)
-	r.POST("/api/moderate", standardHandler.Moderate)
+	standardHandler := standardadapter.NewHandler(svc)
+	r.POST("/api/v1/text/moderation", standardHandler.Moderate)
 
 	return r
 }

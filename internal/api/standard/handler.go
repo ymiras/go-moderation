@@ -1,9 +1,10 @@
-package http
+package standard
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/ymiras/go-moderation/internal/engine"
 	"github.com/ymiras/go-moderation/internal/model"
 )
@@ -33,7 +34,7 @@ type Response struct {
 	LatencyMs float64           `json:"latency_ms"`
 }
 
-// Moderate handles POST /api/moderate.
+// Moderate handles POST /api/v1/text/moderation.
 func (h *Handler) Moderate(c *gin.Context) {
 	var req Request
 	if err := c.ShouldBindJSON(&req); err != nil {

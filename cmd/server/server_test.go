@@ -85,7 +85,7 @@ func TestSetupRouter(t *testing.T) {
 		router := SetupRouter(cfg, svc, logger)
 
 		body := `{"text": "hello world"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
@@ -100,7 +100,7 @@ func TestSetupRouter(t *testing.T) {
 		router := SetupRouter(cfg, svc, logger)
 
 		body := `{"text": "hello world", "point": "input"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer test-api-key")
 		w := httptest.NewRecorder()
@@ -141,7 +141,7 @@ func TestSetupRouter(t *testing.T) {
 		router := SetupRouter(cfg, svc, logger)
 
 		body := `{"text": "hello"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer invalid-token")
 		w := httptest.NewRecorder()
@@ -157,7 +157,7 @@ func TestSetupRouter(t *testing.T) {
 		router := SetupRouter(cfg, svc, logger)
 
 		body := `{"text": "hello"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "test-api-key")
 		w := httptest.NewRecorder()
