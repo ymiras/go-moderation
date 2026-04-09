@@ -45,7 +45,7 @@ X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
 ### 请求
 
 ```
-POST /api/moderate
+POST /api/v1/text/moderation
 Authorization: Bearer <api-key>
 Content-Type: application/json
 ```

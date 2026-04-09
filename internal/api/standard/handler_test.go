@@ -1,4 +1,4 @@
-package http
+package standard
 
 import (
 	"bytes"
@@ -16,7 +16,7 @@ func TestHandler_Moderate(t *testing.T) {
 
 	t.Run("valid request - input moderation", func(t *testing.T) {
 		router := gin.New()
-		router.POST("/api/moderate", func(c *gin.Context) {
+		router.POST("/api/v1/text/moderation", func(c *gin.Context) {
 			var req Request
 			if err := c.ShouldBindJSON(&req); err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "text is required"})
@@ -38,7 +38,7 @@ func TestHandler_Moderate(t *testing.T) {
 		})
 
 		body := `{"text": "hello world", "point": "input", "app_id": "app-1"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
@@ -62,7 +62,7 @@ func TestHandler_Moderate(t *testing.T) {
 
 	t.Run("valid request - output moderation", func(t *testing.T) {
 		router := gin.New()
-		router.POST("/api/moderate", func(c *gin.Context) {
+		router.POST("/api/v1/text/moderation", func(c *gin.Context) {
 			var req Request
 			if err := c.ShouldBindJSON(&req); err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "text is required"})
@@ -76,7 +76,7 @@ func TestHandler_Moderate(t *testing.T) {
 		})
 
 		body := `{"text": "output text", "point": "output", "app_id": "app-1"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
@@ -89,7 +89,7 @@ func TestHandler_Moderate(t *testing.T) {
 
 	t.Run("missing text field", func(t *testing.T) {
 		router := gin.New()
-		router.POST("/api/moderate", func(c *gin.Context) {
+		router.POST("/api/v1/text/moderation", func(c *gin.Context) {
 			var req Request
 			if err := c.ShouldBindJSON(&req); err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "text is required"})
@@ -99,7 +99,7 @@ func TestHandler_Moderate(t *testing.T) {
 		})
 
 		body := `{"point": "input"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
@@ -112,7 +112,7 @@ func TestHandler_Moderate(t *testing.T) {
 
 	t.Run("invalid point value", func(t *testing.T) {
 		router := gin.New()
-		router.POST("/api/moderate", func(c *gin.Context) {
+		router.POST("/api/v1/text/moderation", func(c *gin.Context) {
 			var req Request
 			if err := c.ShouldBindJSON(&req); err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "text is required"})
@@ -126,7 +126,7 @@ func TestHandler_Moderate(t *testing.T) {
 		})
 
 		body := `{"text": "hello", "point": "invalid"}`
-		req := httptest.NewRequest(http.MethodPost, "/api/moderate", bytes.NewBufferString(body))
+		req := httptest.NewRequest(http.MethodPost, "/api/v1/text/moderation", bytes.NewBufferString(body))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
