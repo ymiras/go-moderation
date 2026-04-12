@@ -86,7 +86,7 @@ curl http://localhost:8080/health
 ### 使用标准接口
 
 ```bash
-curl -X POST http://localhost:8080/api/moderate \
+curl -X POST http://localhost:8080/api/v1/text/moderation \
   -H "Authorization: Bearer your-secret-key" \
   -H "Content-Type: application/json" \
   -d '{"text": "这是一段正常的文本内容", "point": "input"}'
