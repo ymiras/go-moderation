@@ -2,13 +2,16 @@
 
 高性能、双路由架构的内容安全审核服务。原生兼容 Dify API Extension，同时提供标准 REST API，适用于 AI 应用、LLM 网关及企业级文本过滤场景。
 
-**Go 1.23+** | **MIT License** | **Dify API Extension Compatible** | **Docker Ready**
+[![Go Version](https://img.shields.io/badge/Go-1.26%2B-blue.svg)](https://golang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Dify Compatible](https://img.shields.io/badge/Dify-API%20Extension-ff6b6b.svg)](https://dify.ai/)
+[![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ed.svg)](https://www.docker.com/)
 
 ---
 
 ## 核心特性
 
-- 双路由架构：标准接口 `/api/moderate` + Dify 专属适配 `/dify/moderation`，核心引擎完全解耦
+- 双路由架构：标准接口 `/api/v1/text/moderation` + Dify 专属适配 `/dify/moderation`，核心引擎完全解耦
 - 极致性能：默认 AC 自动机匹配，单核 10k+ QPS，P99 延迟 < 15ms
 - 词库热更新：原子指针替换 + 双缓冲切换，零停机、零误判
 - 策略可插拔：支持 Chain / Parallel / Weighted 执行模式，混合 AC / Regex / 外部 API
@@ -22,29 +25,31 @@
 ```
 go-moderation/
 ├── cmd/
-│   └── server/main.go              # 服务入口
+│   └── server/
+│       ├── main.go              # 服务入口，依赖注入
+│       └── server.go            # HTTP 路由配置与优雅关闭
 ├── internal/
-│   ├── adapter/
-│   │   ├── dify/                  # Dify 协议适配层
-│   │   └── standard/              # 标准 REST 适配层
-│   ├── config/                     # 配置管理
-│   ├── engine/                     # 核心审核引擎
-│   ├── matcher/                    # 匹配器插件 (AC/Regex/External)
-│   ├── middleware/                 # 中间件 (Auth/RateLimit/Logger)
-│   ├── model/                      # 领域模型
-│   └── storage/                    # 存储层 (WordBank/Cache)
+│   ├── api/
+│   │   ├── dify/                # Dify 协议适配层
+│   │   ├── standard/           # 标准 REST 适配层
+│   │   └── middleware/         # 中间件 (Auth/RateLimit/Logger)
+│   ├── config/                 # Viper 配置管理
+│   ├── engine/                 # 核心审核引擎
+│   ├── matcher/                # 匹配器插件 (AC/Regex/External)
+│   ├── model/                  # 领域模型
+│   └── storage/                # 存储层 (WordBank/Cache)
 ├── pkg/
-│   ├── logger/                     # Zap 日志封装
-│   ├── metrics/                    # Prometheus 指标
-│   └── util/                       # 工具函数
+│   ├── logger/                 # Zap 日志封装
+│   ├── metrics/               # Prometheus 指标
+│   └── util/                  # 工具函数
 ├── configs/
-│   ├── default.yaml                # 基线配置
-│   ├── wordlist/default.csv        # 敏感词库
-│   └── regex/custom_rules.yaml      # 正则规则
-├── scripts/                        # 运维脚本
-├── Dockerfile                      # 多阶段构建
-├── docker-compose.yml             # Docker 编排
-└── Makefile                       # 构建命令
+│   ├── default.yaml            # 基线配置
+│   ├── wordlist/default.csv    # 敏感词库
+│   └── regex/custom_rules.yaml # 正则规则
+├── scripts/                    # 运维脚本
+├── Dockerfile                  # 多阶段构建
+├── docker-compose.yml         # Docker 编排
+└── Makefile                   # 构建命令
 ```
 
 ---
@@ -53,7 +58,7 @@ go-moderation/
 
 ### 前置要求
 
-- Go 1.23+
+- Go 1.26+
 - Docker (可选)
 
 ### 本地运行
@@ -115,7 +120,7 @@ X-Request-ID: <uuid>
 ### 标准审核接口
 
 ```
-POST /api/moderate
+POST /api/v1/text/moderation
 Authorization: Bearer <api-key>
 Content-Type: application/json
 ```
