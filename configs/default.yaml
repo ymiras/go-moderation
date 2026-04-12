@@ -27,8 +27,3 @@ matchers:
     enabled: true
   regex:
     enabled: false
-  external:
-    enabled: false
-    api_url: ""
-    api_key: ""
-    timeout: "5s"

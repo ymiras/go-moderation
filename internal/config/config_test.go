@@ -105,11 +105,6 @@ matchers:
     enabled: false
   regex:
     enabled: true
-  external:
-    enabled: true
-    api_url: "http://external.api"
-    api_key: "secret"
-    timeout: "10s"
 `
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
 		t.Fatalf("Failed to write config file: %v", err)
@@ -145,12 +140,6 @@ matchers:
 	}
 	if !cfg.Matchers.Regex.Enabled {
 		t.Error("Matchers.Regex.Enabled should be true")
-	}
-	if !cfg.Matchers.External.Enabled {
-		t.Error("Matchers.External.Enabled should be true")
-	}
-	if cfg.Matchers.External.APIURL != "http://external.api" {
-		t.Errorf("Matchers.External.APIURL = %v, want %v", cfg.Matchers.External.APIURL, "http://external.api")
 	}
 }
 

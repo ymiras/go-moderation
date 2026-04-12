@@ -7,7 +7,6 @@ import (
 	"github.com/ymiras/go-moderation/internal/engine"
 	"github.com/ymiras/go-moderation/internal/matcher"
 	"github.com/ymiras/go-moderation/internal/matcher/ac"
-	"github.com/ymiras/go-moderation/internal/matcher/external"
 	"github.com/ymiras/go-moderation/internal/matcher/regex"
 	"github.com/ymiras/go-moderation/internal/storage"
 	"go.uber.org/zap"
@@ -50,18 +49,6 @@ func main() {
 		}
 		matchers = append(matchers, m)
 		logger.Info("Regex matcher enabled")
-	}
-	if cfg.Matchers.External.Enabled {
-		m, err := external.NewExternal(&external.ExternalConfig{
-			Endpoint: cfg.Matchers.External.APIURL,
-			APIKey:   cfg.Matchers.External.APIKey,
-			Timeout:  cfg.Matchers.External.Timeout,
-		})
-		if err != nil {
-			logger.Fatal("Failed to create External matcher", zap.Error(err))
-		}
-		matchers = append(matchers, m)
-		logger.Info("External matcher enabled", zap.String("api_url", cfg.Matchers.External.APIURL))
 	}
 
 	// Create moderation service

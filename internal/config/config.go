@@ -21,9 +21,8 @@ type Config struct {
 
 // MatchersConfig holds matcher configurations
 type MatchersConfig struct {
-	AC       ACConfig       `mapstructure:"ac"`
-	Regex    RegexConfig    `mapstructure:"regex"`
-	External ExternalConfig `mapstructure:"external"`
+	AC    ACConfig    `mapstructure:"ac"`
+	Regex RegexConfig `mapstructure:"regex"`
 }
 
 // ACConfig is the configuration for AC automaton matcher
@@ -34,14 +33,6 @@ type ACConfig struct {
 // RegexConfig is the configuration for regex matcher
 type RegexConfig struct {
 	Enabled bool `mapstructure:"enabled"`
-}
-
-// ExternalConfig is the configuration for external API matcher
-type ExternalConfig struct {
-	Enabled bool          `mapstructure:"enabled"`
-	APIURL  string        `mapstructure:"api_url"`
-	APIKey  string        `mapstructure:"api_key"`
-	Timeout time.Duration `mapstructure:"timeout"`
 }
 
 // ServerConfig holds HTTP server settings
@@ -144,8 +135,4 @@ func setDefaults(v *viper.Viper) {
 	// Matcher defaults
 	v.SetDefault("matchers.ac.enabled", true)
 	v.SetDefault("matchers.regex.enabled", false)
-	v.SetDefault("matchers.external.enabled", false)
-	v.SetDefault("matchers.external.api_url", "")
-	v.SetDefault("matchers.external.api_key", "")
-	v.SetDefault("matchers.external.timeout", "5s")
 }
