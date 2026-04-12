@@ -11,9 +11,9 @@ import (
 
 // ModerationService is the entry point for content moderation.
 type ModerationService struct {
-	wordBank storage.WordBank
-	pipeline Pipeline
-	fallback model.ActionType
+	wordBank   storage.WordBank
+	ruleEngine *RuleEngine
+	fallback   model.ActionType
 }
 
 // NewService creates a new ModerationService.
@@ -23,34 +23,36 @@ func NewService(cfg *config.Config, wordBank storage.WordBank, matchers []matche
 		fallback = model.ActionBlock
 	}
 
-	pipeline := NewPipeline(
-		cfg.Moderation.PipelineMode,
-		matchers,
-		cfg.Moderation.WeightedThreshold,
-	)
+	// Create rule engine
+	ruleEngine := NewRuleEngine(nil, matchers)
 
 	return &ModerationService{
-		wordBank: wordBank,
-		pipeline: pipeline,
-		fallback: fallback,
+		wordBank:   wordBank,
+		ruleEngine: ruleEngine,
+		fallback:   fallback,
 	}
+}
+
+// SetRuleStore sets the rule store for the moderation service.
+func (s *ModerationService) SetRuleStore(store RuleStore) {
+	s.ruleEngine.store = store
 }
 
 // Moderate performs content moderation on the given context.
 func (s *ModerationService) Moderate(ctx *ModerationContext) (*model.ModerationResult, error) {
 	start := time.Now()
 
-	result, err := s.pipeline.Execute(ctx, s.wordBank)
-	if err != nil {
-		// Fallback on error
-		return &model.ModerationResult{
-			Flagged:   false,
-			Action:    s.fallback,
-			Hits:      nil,
-			LatencyMs: float64(time.Since(start).Microseconds()) / 1000.0,
-		}, nil
+	// Use rule engine
+	decision := s.ruleEngine.Evaluate(ctx)
+
+	if decision.Action == "" {
+		decision.Action = s.fallback
 	}
 
-	result.LatencyMs = float64(time.Since(start).Microseconds()) / 1000.0
-	return result, nil
+	return &model.ModerationResult{
+		Flagged:   decision.Action != model.ActionPass,
+		Action:    decision.Action,
+		Hits:      decision.Hits,
+		LatencyMs: float64(time.Since(start).Microseconds()) / 1000.0,
+	}, nil
 }
